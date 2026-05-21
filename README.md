@@ -3,7 +3,7 @@
 <img width="915" height="447" alt="image" src="https://github.com/user-attachments/assets/0348aab0-bb03-441c-b438-a078f3b9bded" />
 
 # breakdown
-<img width="1169" height="215" alt="image" src="https://github.com/user-attachments/assets/f70780da-4160-4bce-b211-c76cfe2933d8" />
+<img width="526" height="215" alt="image" src="https://github.com/user-attachments/assets/d66b6776-fba1-4c77-939f-0195f9d04684" />
 
 # MSC
 <img width="1367" height="581" alt="image" src="https://github.com/user-attachments/assets/547779dd-6481-4b90-8fb8-7badced55ffd" />
