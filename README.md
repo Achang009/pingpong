@@ -15,3 +15,4 @@
 <img width="1001" height="557" alt="image" src="https://github.com/user-attachments/assets/d4dce052-476d-4f89-a7af-6cc994c7da9a" />
 
 # 架構圖
+<img width="1253" height="1102" alt="image" src="https://github.com/user-attachments/assets/dcc6bced-3f51-45aa-88ba-5cbb285e2fd2" />
