@@ -42,7 +42,7 @@ begin
 
 
     -- 2. 按鍵暫存器 (管 btn_reg，產生脈衝)
-    proc_btn_reg: process(f_clk, i_rst)
+    proc_btn: process(f_clk, i_rst)
     begin
         if i_rst = '1' then
             btnL_reg <= '0';
