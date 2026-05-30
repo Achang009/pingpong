@@ -22,8 +22,6 @@ architecture Behavioral of ping_pong is
     signal sc_R       : STD_LOGIC_VECTOR(3 downto 0);
     signal cnt        : STD_LOGIC_VECTOR(bits-1 downto 0) := (others => '0');
     signal f_clk      : std_logic;
-
-    -- 按鍵邊緣檢測暫存器
     signal btnL_reg, btnR_reg       : std_logic;
     signal btnL_pulse, btnR_pulse   : std_logic;
 
@@ -31,7 +29,7 @@ begin
 
     o_led <= led;
 
-    -- 1. 分頻計數器 (管 cnt)
+    -- 1. 分頻計數器
     proc_divider: process(i_clk, i_rst)
     begin
         if i_rst = '1' then cnt <= (others => '0');
@@ -41,7 +39,7 @@ begin
     f_clk <= cnt(bits-1);
 
 
-    -- 2. 按鍵暫存器 (管 btn_reg，產生脈衝)
+    -- 2. 按鍵暫存器
     proc_btn: process(f_clk, i_rst)
     begin
         if i_rst = '1' then
@@ -56,7 +54,7 @@ begin
     btnR_pulse <= '1' when (i_btnR = '1' and btnR_reg = '0') else '0';
 
 
-    -- 3. 主狀態機 (管 state 跳轉)
+    -- 3. 主狀態機
     proc_fsm: process(f_clk, i_rst)
     begin
         if i_rst = '1' then
@@ -67,12 +65,9 @@ begin
                     if btnL_pulse = '1' then    state <= serve_L; 
                     elsif btnR_pulse = '1' then state <= serve_R; 
                     end if;
-                    
                 when serve_L | serve_R =>
                     state <= play;
-                    
                 when play =>    
-                    -- 【修正】加入 dir 判斷：
                     -- 左方失誤：(球往左飛 dir='1' 且漏接) 或 (球不在最左邊卻提前擊打)
                     if (dir = '1' and led = "10000000" and btnL_pulse = '0') or (led /= "10000000" and btnL_pulse = '1') then
                         state <= check_win;
@@ -81,7 +76,6 @@ begin
                     elsif (dir = '0' and led = "00000001" and btnR_pulse = '0') or (led /= "00000001" and btnR_pulse = '1') then
                         state <= check_win;
                     end if;
-                    
                 when check_win =>
                     -- 檢查是否達到 15 分
                     if sc_L = "1111" then    state <= win_L;
@@ -99,7 +93,7 @@ begin
     end process;
 
 
-    -- 4. LED 燈光控制 (管 led)
+    -- 4. LED 燈光控制
     proc_led: process(f_clk, i_rst)
     begin
         if i_rst = '1' then led <= "00000000";
@@ -130,7 +124,7 @@ begin
     end process;
 
 
-    -- 5. 球的移動方向控制 (管 dir)
+    -- 5. 球的移動方向控制
     proc_dir: process(f_clk, i_rst)
     begin
         if i_rst = '1' then dir <= '0';
@@ -149,7 +143,7 @@ begin
     end process;
 
 
-    -- 6. 計分控制 (管 sc_L 與 sc_R)
+    -- 6. 計分控制
     proc_score: process(f_clk, i_rst)
     begin
         if i_rst = '1' then 
@@ -157,11 +151,9 @@ begin
             sc_R <= "0000";
         elsif rising_edge(f_clk) then
             if state = play then
-                -- 【修正】計分邏輯同步加入 dir 判斷，確保只在防守方失誤時加分
                 -- 左方失誤 -> 右方加分
                 if (dir = '1' and led = "10000000" and btnL_pulse = '0') or (led /= "10000000" and btnL_pulse = '1') then
                     sc_R <= sc_R + 1;
-                    
                 -- 右方失誤 -> 左方加分
                 elsif (dir = '0' and led = "00000001" and btnR_pulse = '0') or (led /= "00000001" and btnR_pulse = '1') then
                     sc_L <= sc_L + 1;
