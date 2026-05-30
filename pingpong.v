@@ -29,8 +29,8 @@ begin
 
     o_led <= led;
 
-    -- 1. 分頻計數器
-    proc_divider: process(i_clk, i_rst)
+    -- 1.除頻器
+    frequencydivider: process(i_clk, i_rst)
     begin
         if i_rst = '1' then cnt <= (others => '0');
         elsif rising_edge(i_clk) then cnt <= cnt + 1;
@@ -40,7 +40,7 @@ begin
 
 
     -- 2. 按鍵暫存器
-    proc_btn: process(f_clk, i_rst)
+    p_btn: process(f_clk, i_rst)
     begin
         if i_rst = '1' then
             btnL_reg <= '0';
@@ -55,7 +55,7 @@ begin
 
 
     -- 3. 主狀態機
-    proc_fsm: process(f_clk, i_rst)
+    FSM: process(f_clk, i_rst)
     begin
         if i_rst = '1' then
             state <= wait_serve;
@@ -94,7 +94,7 @@ begin
 
 
     -- 4. LED 燈光控制
-    proc_led: process(f_clk, i_rst)
+    p_led: process(f_clk, i_rst)
     begin
         if i_rst = '1' then led <= "00000000";
         elsif rising_edge(f_clk) then
@@ -108,7 +108,7 @@ begin
                     led <= "00000001"; 
                     
                 when play =>
-                    -- 【修正】嚴格限制只能在最邊緣擊球
+                    -- 只能在最邊緣擊球
                     if led = "10000000" and btnL_pulse = '1' then      led <= "01000000";
                     elsif led = "00000001" and btnR_pulse = '1' then   led <= "00000010";
                     else
@@ -125,7 +125,7 @@ begin
 
 
     -- 5. 球的移動方向控制
-    proc_dir: process(f_clk, i_rst)
+    p_dir: process(f_clk, i_rst)
     begin
         if i_rst = '1' then dir <= '0';
         elsif rising_edge(f_clk) then
@@ -134,7 +134,7 @@ begin
             elsif state = serve_R then 
                 dir <= '1';
             elsif state = play then
-                -- 【修正】嚴格限制只能在最邊緣擊球
+                -- 只能在最邊緣擊球
                 if led = "10000000" and btnL_pulse = '1' then      dir <= '0'; 
                 elsif led = "00000001" and btnR_pulse = '1' then   dir <= '1'; 
                 end if;
@@ -144,7 +144,7 @@ begin
 
 
     -- 6. 計分控制
-    proc_score: process(f_clk, i_rst)
+    p_score: process(f_clk, i_rst)
     begin
         if i_rst = '1' then 
             sc_L <= "0000";
