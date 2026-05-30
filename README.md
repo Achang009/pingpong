@@ -3,7 +3,7 @@
 <img width="915" height="447" alt="image" src="https://github.com/user-attachments/assets/0348aab0-bb03-441c-b438-a078f3b9bded" />
 
 # breakdown
-<img width="755" height="883" alt="image" src="https://github.com/user-attachments/assets/473ac92e-6bd2-44b6-b43b-7f8dd20618ed" />
+<img width="688" height="228" alt="image" src="https://github.com/user-attachments/assets/5a07be62-70e6-4f90-aa82-124003fac205" />
 
 
 
