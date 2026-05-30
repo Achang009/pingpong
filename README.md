@@ -15,7 +15,8 @@
 <img width="826" height="904" alt="image" src="https://github.com/user-attachments/assets/c479a237-f55c-474e-8f13-691858d1d011" />
 
 # AOV
-<img width="1001" height="557" alt="image" src="https://github.com/user-attachments/assets/d4dce052-476d-4f89-a7af-6cc994c7da9a" />
+<img width="1543" height="930" alt="image" src="https://github.com/user-attachments/assets/64196adf-088a-41b9-9f97-83ea3daa4c7d" />
+
 
 # 架構圖
 <img width="788" height="839" alt="image" src="https://github.com/user-attachments/assets/70131ad6-16c4-41b6-89db-81242a6934f8" />
