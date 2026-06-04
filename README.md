@@ -24,3 +24,8 @@
 # 架構圖
 <img width="788" height="839" alt="image" src="https://github.com/user-attachments/assets/70131ad6-16c4-41b6-89db-81242a6934f8" />
 
+# 影片
+
+
+https://github.com/user-attachments/assets/22ef5e9a-d6be-43a0-8063-d84f7332129c
+
