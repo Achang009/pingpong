@@ -1,6 +1,7 @@
 # pingpong
 # 波形圖
-<img width="915" height="447" alt="image" src="https://github.com/user-attachments/assets/0348aab0-bb03-441c-b438-a078f3b9bded" />
+<img width="1227" height="496" alt="image" src="https://github.com/user-attachments/assets/e467b467-f91c-460b-9046-b90fe36044c8" />
+
 
 # breakdown
 <img width="688" height="228" alt="image" src="https://github.com/user-attachments/assets/5a07be62-70e6-4f90-aa82-124003fac205" />
