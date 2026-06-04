@@ -12,7 +12,8 @@
 
 
 # FSM
-<img width="826" height="904" alt="image" src="https://github.com/user-attachments/assets/c479a237-f55c-474e-8f13-691858d1d011" />
+<img width="829" height="920" alt="image" src="https://github.com/user-attachments/assets/956c1b89-71e1-4590-ab43-714e4efbedc8" />
+
 
 # AOV
 <img width="1543" height="930" alt="image" src="https://github.com/user-attachments/assets/64196adf-088a-41b9-9f97-83ea3daa4c7d" />
