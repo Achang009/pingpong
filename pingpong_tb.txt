@@ -2,111 +2,83 @@ library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 
 entity tb_ping_pong is
--- Testbench 本身不需要 Port
 end tb_ping_pong;
 
-architecture behavior of tb_ping_pong is
-
+architecture Behavioral of tb_ping_pong is
     component ping_pong
-    Port (
-        i_clk      : in  STD_LOGIC;
-        i_rst      : in  STD_LOGIC;
-        i_btnL     : in  STD_LOGIC;
-        i_btnR     : in  STD_LOGIC;
-        i_btn_next : in  STD_LOGIC;
-        o_led      : out STD_LOGIC_VECTOR (7 downto 0)
-    );
+        Port ( 
+            i_clk   : in  STD_LOGIC;
+            i_rst   : in  STD_LOGIC;
+            i_btnL  : in  STD_LOGIC;
+            i_btnR  : in  STD_LOGIC;
+            o_led   : out STD_LOGIC_VECTOR (7 downto 0)
+        );
     end component;
 
-    signal i_clk      : STD_LOGIC := '0';
-    signal i_rst      : STD_LOGIC := '0';
-    signal i_btnL     : STD_LOGIC := '0';
-    signal i_btnR     : STD_LOGIC := '0';
-    signal i_btn_next : STD_LOGIC := '0';
-    signal o_led      : STD_LOGIC_VECTOR(7 downto 0);
+    signal i_clk  : STD_LOGIC := '0';
+    signal i_rst  : STD_LOGIC := '1';
+    signal i_btnL : STD_LOGIC := '0';
+    signal i_btnR : STD_LOGIC := '0';
+    signal o_led  : STD_LOGIC_VECTOR (7 downto 0);
 
-    constant clk_period : time := 10 ns;
-
+    constant CLK_PERIOD : time := 20 ns;
 begin
-
-    uut: ping_pong Port map (
-        i_clk      => i_clk,
-        i_rst      => i_rst,
-        i_btnL     => i_btnL,
-        i_btnR     => i_btnR,
-        i_btn_next => i_btn_next,
-        o_led      => o_led
+    uut: ping_pong port map (
+        i_clk  => i_clk,
+        i_rst  => i_rst,
+        i_btnL => i_btnL,
+        i_btnR => i_btnR,
+        o_led  => o_led
     );
 
-    -- 產生連續的 Clock (100MHz)
-    clk_process :process
+    -- 產生時脈 50MHz
+    clk_process : process
     begin
         i_clk <= '0';
-        wait for clk_period/2;
+        wait for CLK_PERIOD/2;
         i_clk <= '1';
-        wait for clk_period/2;
+        wait for CLK_PERIOD/2;
     end process;
 
-    -- 產生測試情境 (Stimulus)
+    -- 測試劇本
     stim_proc: process
     begin
-        -- 系統初始化 (Reset)
+        -- 1. 初始化與重置
         i_rst <= '1';
         i_btnL <= '0';
         i_btnR <= '0';
-        i_btn_next <= '0';
-        wait for 30 ns;
-        i_rst <= '0';
-
-        -- 確保來到 wait_serve 狀態 (初始燈號兩側亮 "10000001")
-        wait until falling_edge(i_clk);
-
-        -- ===============================================
-        -- 動作 1：左邊發球 (Left serves)
-        -- ===============================================
-        i_btnL <= '1';                 
-        wait until falling_edge(i_clk); 
-        i_btnL <= '0';                 
-
-        -- ===============================================
-        -- 動作 2：等待球往右邊飛，並在抵達時「右邊打回來」
-        -- ===============================================
-        -- 在每個 Clock 的下降緣檢查燈號，確認球是否到底線
-        loop
-            wait until falling_edge(i_clk);
-            if o_led = "00000001" then
-                i_btnR <= '1'; -- 球抵達右邊界！馬上按下右邊按鈕
-                exit;          -- 跳出迴圈
-            end if;
-        end loop;
+        wait for 100 ns;
         
-        -- 維持按壓一個 Clock 後放開
+        wait until falling_edge(i_clk);
+        i_rst <= '0';
+        wait for CLK_PERIOD * 2;
+
+        -- 2. 左方發球
+        wait until falling_edge(i_clk);
+        i_btnL <= '1';
+        wait until falling_edge(i_clk);
+        i_btnL <= '0';
+        
+        wait for CLK_PERIOD * 8; 
+
+        -- 3. 右方精準回擊 (在最右邊緣按下)
+        wait until falling_edge(i_clk);
+        i_btnR <= '1';
         wait until falling_edge(i_clk);
         i_btnR <= '0';
 
-        -- ===============================================
-        -- 動作 3：等待球往左邊飛，並故意「左邊漏接」
-        -- ===============================================
-        loop
-            wait until falling_edge(i_clk);
-            if o_led = "10000000" then
-                -- 球抵達左邊界！但我們故意「不」按左邊按鈕 (保持 i_btnL = '0')
-                exit;
-            end if;
-        end loop;
+        -- 球往左飛回 (需要 7 拍才會到最左邊 10000000)
+        wait for CLK_PERIOD * 7;
 
-        -- ===============================================
-        -- 動作 4：確認進入計分狀態 (show_score)
-        -- ===============================================
-        -- 漏接後，等待兩個 Clock 讓狀態機進行判定與計分
-        wait until falling_edge(i_clk);
-        wait until falling_edge(i_clk);
+        -- 4. 左方漏接 (球到了左邊，故意不按按鍵，讓時脈繼續走)
+        wait for CLK_PERIOD * 5;
         
-        -- 此時 o_led 應該會顯示分數：左邊 0 分 (0000)，右邊 1 分 (0001)
-        -- 所以最終 o_led 會停在 "00000001"
-        
-        -- 模擬結束，卡在這裡觀察波形
+        -- 5. 左方重新發球 (此時畫面應該已經顯示右方得一分：00000001)
+        wait until falling_edge(i_clk);
+        i_btnL <= '1';
+        wait until falling_edge(i_clk);
+        i_btnL <= '0';
+
         wait;
     end process;
-
-end behavior;
+end Behavioral;
